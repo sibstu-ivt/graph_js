@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Петряев К.Ю. Лабораторная работа №2</title>
+    <script src="./index.js"></script>
+    <script src="./parser.js"></script>
+    <script src="./jscolor/jscolor.js"></script>
+</head>
+<body>
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <canvas id = "canv" width="900" height="900" onclick="getCord(event, this)">
+            </canvas>
+        </td>
+        <td>
+            <p>Координаты холста ограничены (0-900).</p>
+
+            <label for="color">Новый цвет</label>
+            <input id ="color" placeholder="0" class="color"/>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<script>
+
+    var imgsrc = new Image();  // Создание нового объекта изображения
+    imgsrc.src = './img.bmp';
+	imgsrc.crossOrigin = "Anonymous";
+
+
+
+
+    var img;
+
+    var canv = document.getElementById('canv');
+    canv.width = 900;
+    canv.height = 900;
+    canv.addEventListener('click', getCord);
+    var context = canv.getContext('2d');
+    imgsrc.onload = function(){
+        context.drawImage(imgsrc,0,0);
+        img = context.getImageData(0,0, 900,900);
+        for(var i = 0 ; i < img.data.length; i +=4) {
+            //img.data[i] = img.data[i+1] = img.data[i+2] = 0;
+            img.data[i+3] = 255;
+        }
+        context.putImageData(img, 0, 0);
+
+        img = new Img(context.getImageData(0,0,900,900));
+        //var DATA = context.getImageData(0,0,10,);
+    };
+
+	canv.onclick = getCord;
+    var uniq = true;
+    function getCord(a,b,c,d){
+        //for(var i in a)console.log(i, a[i]);console.log(offsets,cords);
+        if (!uniq) return;
+        uniq = false;
+        setTimeout(function(){uniq = true;},100);
+        
+       
+        img.fill(a.layerX || a.offsetX, a.layerY || a.offsetY, document.getElementById('color').value, function(){
+            context.putImageData(img.$,0,0);
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Петряев К.Ю. Лабораторная работа №3</title>
+    <script src="inherit.js"></script>
+    <script src="matrix.js"></script>
+    <script src="transform.js"></script>
+    <script src="coordinate.js"></script>
+    <script src="fileparser.js"></script>
+    <script src="form.js"></script>
+</head>
+<body>
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <canvas id = "canv" width="900" height="900">
+            </canvas>
+        </td>
+        <td>
+            <select id="forms" multiple>
+            </select>
+            <br/>
+            <br/>
+            <label for="scaleX">Scaling X:</label>
+            <input id ="scaleX" placeholder="1" value ="1" type="number"/><br/>
+            <br/>
+            <label for="scaleY">Scaling Y:</label>
+            <input id ="scaleY" placeholder="1" value ="1" type="number"/>
+            <br/>
+            <br/>
+            <label for="rotate">Rotate:</label>
+            <input id ="rotate" placeholder="0" value ="0" type="number"/>
+            <br/>
+            <br/>
+            <label for="rX">Rotate X:</label>
+            <input id ="rX" placeholder="0" value ="450" type="number"/>
+            <br/>
+            <br/>
+            <label for="rX">Rotate Y:</label>
+            <input id ="rY" placeholder="0" value ="450" type="number"/>
+            <br/>
+            <br/>
+            <label for="moveX">Move X:</label>
+            <input id ="moveX" placeholder="0" value ="0" type="number"/>
+            <br/>
+            <br/>
+            <label for="moveX">Move Y:</label>
+            <input id ="moveY" placeholder="0" value ="0" type="number"/>
+            <br/>
+            <br/>
+            <button onClick="redraw()">Update</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<script>
+    var canv = document.getElementById('canv');
+    canv.ondragstart = function() {
+        return false;
+    };
+    canv.width = 900;
+    canv.height = 900;
+    if (canv && canv.getContext) {
+        var context = canv.getContext('2d');
+        
+    }
+    else console.error('NO CONTEXT');
+
+    var select = document.getElementById('forms');
+
+    var f = new File('file.json');
+    f.onLoad(function(){
+    var forms = [];
+
+    (function(){
+        var counter = {};
+        f.getObjects().map(function(object, index){
+            console.log(object);
+            if (!counter[object.type]){
+                counter[object.type] = 0;
+            }
+            var elem = document.createElement('option');
+            elem.innerHTML = {
+                "polygon":"Многоугольник",
+                "dot":"Точка"
+            }[object.type] + " " + (++counter[object.type]);
+            elem.id = 'form_'+index;
+            select.appendChild(elem);
+        });
+        forms = f.getObjects().map(function(object){
+            var form = new Form(object);
+            form.draw(context);
+            return form;
+        });
+    })();
+    });
+    
+
+    function redraw(){
+        context.clearRect(0, 0, 900, 900);
+
+        //console.log(forms);
+//        forms = forms.map(function(form, index){
+//            //console.log(form, index);
+//            var html = document.getElementById('form_'+index);
+//            if (!html.selected) return form;
+//            return form.coordinatesMap(function(matrix){
+//                var rMoveX = Number(document.getElementById('rX').value) || 0;
+//                var rMoveY = Number(document.getElementById('rY').value) || 0;
+//                var rotate = Number(document.getElementById('rotate').value) || 0;
+//
+//                var m2 = matrix.rotate(rotate, rMoveX, rMoveY);
+//
+//
+//                var moveX = Number(document.getElementById('moveX').value) || 0;
+//                var moveY = Number(document.getElementById('moveY').value) || 0;
+//
+//                var m1 = CoordinatesMatrix.get(m2).move(moveX, moveY);
+//
+//
+//                var scaleX = Number(document.getElementById('scaleX').value) || 1;
+//                var scaleY = Number(document.getElementById('scaleY').value) || 1;
+//                return CoordinatesMatrix.get(m1).scale(scaleX, scaleY);
+//            });
+//        });
+//        //console.log(forms);
+//        forms.map(function(form){
+//            form.draw(context);
+//            return form;
+//        });
+        //setTimeout(function(){
+            context.clearRect(0, 0, 900, 900);
+            forms = forms.map(function(form, index){
+                var html = document.getElementById('form_'+index);
+                if (!html.selected) return form;
+                return form.rotate(
+                        Number(document.getElementById('rotate').value) || 0,
+                        Number(document.getElementById('rX').value) || 0,
+                        Number(document.getElementById('rY').value) || 0
+                ).move(
+                        Number(document.getElementById('moveX').value) || 0,
+                        Number(document.getElementById('moveY').value) || 0
+                ).scale(
+                        Number(document.getElementById('scaleX').value) || 1,
+                        Number(document.getElementById('scaleY').value) || 1
+                );;
+            }).map(function(form){
+                return form.draw(context);
+            });
+            //console.log('redrawed');
+        //}, 5000);
+    }
+
+
+//    function mouseDown (event){
+//        console.log(event);
+//        for(var i in event){
+//            if (event[i] instanceof Function) {
+//                var res = event[i];
+//                try{
+//                    res = event[i]();
+//                }
+//                catch(e){}
+//                console.log(i, 'f', res);
+//            }
+//            else console.log(i, event[i]);
+//        }
+//        console.log(canv.offsetLeft, event.pageX, canv.offsetTop, event.pageY);
+//    }
+//
+//    function mouseUp (event){
+//        console.log(event);
+//    }
+
+
+    
+</script>
+</body>
+</html>

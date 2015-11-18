@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Петряев К.Ю. Лабораторная работа №1</title>
+    <script src="fract.js"></script>
+</head>
+<body>
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <canvas id = "canv" width="900" height="900">
+            </canvas>
+        </td>
+        <td>
+            <p>Координаты холста ограничены (0-900).</p>
+
+            <label for="startx">x1</label>
+            <input id ="startx" placeholder="0" value ="0"/>
+            <label for="starty">y1</label>
+            <input id ="starty" placeholder="0" value ="0"/>
+            <br/>
+            <br/>
+            <label for="endx">x2</label>
+            <input id ="endx" placeholder="900" value ="900"/>
+            <label for="endy">y2</label>
+            <input id ="endy" placeholder="900" value ="900"/>
+            <br/>
+            <br/>
+            <label for="timeout">Время между итерациями (мс)</label>
+            <input id ="timeout" value ="2000"/>
+            <br/>
+            <br/>
+            <label for="iterations">Глубина (не более 10)</label>
+            <input id ="iterations" placeholder="рекомендуется не более 6" value ="5"/>
+            <br/>
+            <br/>
+            <button onClick="drawFractal()">Отрисовать</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<script>
+    function drawFractal() {
+        var canv = document.getElementById('canv');
+        var iter = Number(document.getElementById('iterations').value);
+        var x1 = Number(document.getElementById('startx').value);
+        var y1 = Number(document.getElementById('starty').value);
+        var x2 = Number(document.getElementById('endx').value);
+        var y2 = Number(document.getElementById('endy').value);
+        var timeout = Number(document.getElementById('timeout').value);
+        if (iter > 10 || !iter) iter = 10;
+        canv.width = 900;
+        canv.height = 900;
+        if (canv && canv.getContext) {
+            var context = canv.getContext('2d');
+            var f = new Fract(context, iter, [
+                {
+                    x: isNaN(x1)?0:x1,
+                    y: isNaN(y1)?900:y1
+                },
+                {
+                    x: isNaN(x2)?900:x2,
+                    y: isNaN(y2)?0:y2
+                }
+            ]);
+            f.setTimeout(timeout || 2000);
+            f.draw();
+        }
+        else console.error('NO CONTEXT');
+    }
+</script>
+</body>
+</html>

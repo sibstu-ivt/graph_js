@@ -1,0 +1,43 @@
+[
+  {
+    "type":"polygon",
+    "coordinates":[
+      [100,312],
+      [100,350],
+      [310,400],
+      [130,420],
+      [500,420],
+      [900,312]
+    ]
+  },
+  {
+    "type":"dot",
+    "coordinates": [
+      [200,10]
+    ]
+  },
+  {
+    "type":"dot",
+    "coordinates": [
+      [240,50]
+    ]
+  },
+  {
+    "type":"dot",
+    "coordinates": [
+      [500,20]
+    ]
+  },
+  {
+    "type":"dot",
+    "coordinates": [
+      [600,80]
+    ]
+  },
+  {
+    "type":"dot",
+    "coordinates": [
+      [700,10]
+    ]
+  }
+]
